@@ -53,8 +53,9 @@ function watchWindows(callback) {
 
         // Now that the window has loaded, only handle browser windows
         let {documentElement} = window.document;
-        if(documentElement.getAttribute('windowtype') == 'navigator:browser')
+        if(documentElement.getAttribute('windowtype') == 'navigator:browser') {
             callback(window);
+        }
     }
 
     // Wait for the window to finish loading before running the callback
@@ -75,25 +76,24 @@ function watchWindows(callback) {
 
         // Only run the watcher immediately if the window is completely loaded
         let window = windows.getNext();
-        if(window.document.readyState == 'complete')
+        if(window.document.readyState == 'complete'){
             watcher(window);
-        // Wait for the window to load before continuing
-        else
+        } else {
             runOnLoad(window);
+        }
     }
 
     // Watch for new browser windows opening then wait for it to load
     function windowWatcher(subject, topic) {
-
-        if(topic == 'domwindowopened')
+        if(topic == 'domwindowopened') {
             runOnLoad(subject);
+        }
     }
 
     Services.ww.registerNotification(windowWatcher);
 
     // Make sure to stop watching for windows if we're unloading
     unload(function() {
-
         Services.ww.unregisterNotification(windowWatcher);
     });
 }
