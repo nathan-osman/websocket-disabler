@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var EXPORTED_SYMBOLS = ['addItemToDesktopMenu', 'addItemToMobileMenu'],
+var EXPORTED_SYMBOLS = ['addItemToDesktopMenu'],
     NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
 
 Components.utils.import('chrome://websocket-disabler/content/unload.jsm');
@@ -14,14 +14,14 @@ Components.utils.import('chrome://websocket-disabler/content/unload.jsm');
  * @param [String] id: The ID of the new menu item
  * @param [String] title: The title of the new menu item
  * @param [function] callback: The callback to be invoked when the menu item is selected
- * @return [String]: The newly created menu item
+ * @return [Object]: The newly created menu item
  */
 function addItemToDesktopMenu(window, menu_id, id, title, callback) {
 
     // Ensure the menu exists
     let menu = window.document.getElementById(menu_id);
     if(menu === null)
-        return;
+        return null;
 
     // Create the separator and menu item that will be appended to the menu
     let separator = window.document.createElementNS(NS_XUL, 'menuseparator'),
