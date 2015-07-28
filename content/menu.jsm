@@ -14,6 +14,7 @@ Components.utils.import('chrome://websocket-disabler/content/unload.jsm');
  * @param [String] id: The ID of the new menu item
  * @param [String] title: The title of the new menu item
  * @param [function] callback: The callback to be invoked when the menu item is selected
+ * @return [String]: The newly created menu item
  */
 function addItemToDesktopMenu(window, menu_id, id, title, callback) {
 
@@ -45,4 +46,6 @@ function addItemToDesktopMenu(window, menu_id, id, title, callback) {
         menu.removeChild(separator);
         menu.removeChild(menuItem);
     });
+
+    return menuItem;
 }
