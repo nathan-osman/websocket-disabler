@@ -15,7 +15,7 @@ function startup(data, reason) {
 
     // Use a boolean to keep track of whether WebSockets are enabled or not and
     // declare a simple function to generate the menu label based on that
-    var enabled = true;
+    var enabled = false;
     function menuItemTitle() {
         return (enabled ? "Disable" : "Enable") + " WebSockets";
     }
