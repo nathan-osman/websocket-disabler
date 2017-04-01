@@ -3,7 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 let NS_XUL = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
-let PREF_ENABLED = 'extensions.websocket-disabler.enabled';
+let PREF_DOMAIN = 'extensions.websocket-disabler.';
+let PREF_ENABLED = 'enabled';
+
+var prefs = Components.classes['@mozilla.org/preferences-service;1']
+        .getService(Components.interfaces.nsIPrefService);
 
 function install(data, reason) {}
 function uninstall(data, reason) {}
@@ -15,13 +19,11 @@ function startup(data, reason) {
     Components.utils.import('chrome://websocket-disabler/content/watchwindows.jsm');
 
     // Set the default for the add-on
-    var prefs = Components.classes['@mozilla.org/preferences-service;1']
-            .getService(Components.interfaces.nsIPrefService);
-    prefs.getDefaultBranch('').setBoolPref(PREF_ENABLED, false);
+    prefs.getDefaultBranch(PREF_DOMAIN).setBoolPref(PREF_ENABLED, false);
 
     // Use a boolean to keep track of whether WebSockets are enabled or not and
     // declare a simple function to generate the menu label based on that
-    var enabled = prefs.getBranch('').getBoolPref(PREF_ENABLED);
+    var enabled = prefs.getBranch(PREF_DOMAIN).getBoolPref(PREF_ENABLED);
     function menuItemTitle() {
         return (enabled ? "Enable" : "Disable") + " WebSockets";
     }
@@ -46,7 +48,7 @@ function startup(data, reason) {
                 item.setAttribute('label', menuItemTitle());
 
                 // Store the pref
-                prefs.getBranch('').setBoolPref(PREF_ENABLED, enabled);
+                prefs.getBranch(PREF_DOMAIN).setBoolPref(PREF_ENABLED, enabled);
             }
         );
 
@@ -71,5 +73,11 @@ function shutdown(data, reason) {
     // Unless the application is shutting down, remove the items
     if(reason != APP_SHUTDOWN) {
         unload();
+    }
+
+    // Clear the defaults if not set
+    var branch = prefs.getDefaultBranch(PREF_DOMAIN);
+    if (!branch.prefHasUserValue(PREF_ENABLED)) {
+        branch.deleteBranch(PREF_ENABLED);
     }
 }
